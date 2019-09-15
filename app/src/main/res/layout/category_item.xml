@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:id="@+id/itemGrid"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:elevation="6dp"
+        android:orientation="horizontal"
+        android:paddingEnd="16dp">
+
+        <ImageView
+            android:id="@+id/img_Alphabet"
+            android:layout_width="47dp"
+            android:layout_height="50dp"
+
+            android:layout_gravity="end"
+            android:scaleType="fitXY"
+            tools:src="@drawable/image_part_001" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/txt_catTile"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|end"
+                android:layout_marginEnd="70dp"
+                android:shadowColor="@color/colorPrimary"
+                android:shadowDx="0.3"
+                android:shadowDy="0.3"
+                android:shadowRadius="1"
+                android:text="اDDDDD"
+                android:textColor="@android:color/background_dark"
+                android:textSize="24sp" />
+
+            <TextView
+                android:id="@+id/txt_CatDesc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:shadowColor="@color/colorPrimaryDark"
+                android:shadowDx="0.4"
+                android:shadowRadius="1"
+                android:textColor="@android:color/background_dark"
+                android:textSize="10sp" />
+        </LinearLayout>
+
+    </FrameLayout>
+</FrameLayout>
