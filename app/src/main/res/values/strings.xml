@@ -3,4 +3,16 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="ad_attribution">Ad</string>
+
+
+    <string name="privacy_url">http://www.dev3pro.com/index/privacy_policy.html</string>
+
+    <string name="publisher_id">pub-6560477533466499</string>
+    <string name="admob_app_id" translatable="false">ca-app-pub-3940256099942544~3347511713</string>
+
+    <string name="admob_banner_id">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="interstitial">ca-app-pub-3940256099942544/1033173712</string>
+    <string name="native_ads">ca-app-pub-6560477533466455/3116762556</string>
+
 </resources>
