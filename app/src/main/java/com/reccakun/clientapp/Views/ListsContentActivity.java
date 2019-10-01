@@ -15,6 +15,11 @@ import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.reccakun.clientapp.Controllers.DBConnect;
 import com.reccakun.clientapp.Models.CostumMenu;
 import com.reccakun.clientapp.Models.Dream;
@@ -34,13 +39,22 @@ List<Dream> listDreams;
     int id;
     ImageView home;
     private ImageView back;
+    private AdView mAdView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dreams);
         try{
+            MobileAds.initialize(this, new OnInitializationCompleteListener() {
+                @Override
+                public void onInitializationComplete(InitializationStatus initializationStatus) {
+                }
+            });
 
+            mAdView = findViewById(R.id.adView2);
+            AdRequest adRequest = new AdRequest.Builder().build();
+            mAdView.loadAd(adRequest);
             this.getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
             getSupportActionBar().setDisplayShowCustomEnabled(true);
             getSupportActionBar().setCustomView(R.layout.custom_action_bar);
@@ -93,7 +107,7 @@ List<Dream> listDreams;
             dbDreams=new DBConnect(getApplicationContext());
             listDreams=dbDreams.getDreamsByCat(id);
             copyList =  dbDreams.getDreamsByCat(id);
-            mAdapter=new DreamAdapter(mContext,R.layout.courses_item, listDreams);
+            mAdapter=new DreamAdapter(mContext,R.layout.dreams_item, listDreams);
             ListView listViewCourses=findViewById(R.id.listview_courses);
             listViewCourses.setAdapter(mAdapter);
             listViewCourses.setOnItemClickListener(new AdapterView.OnItemClickListener() {

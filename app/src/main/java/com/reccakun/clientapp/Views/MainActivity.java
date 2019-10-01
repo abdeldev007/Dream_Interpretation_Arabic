@@ -75,10 +75,10 @@ public class MainActivity extends AppCompatActivity {
                  }
              });
              ImageView home=findViewById(R.id.homeBtn);
-            home.setVisibility(View.GONE);
+             home.setVisibility(View.GONE);
              listsCat =dbDreams.getAllCategory();
-            mAdapter=new CategoriesAdapter(mContext,R.layout.category_item, listsCat);
-            ListView ViewCat=findViewById(R.id.listCat);
+             mAdapter=new CategoriesAdapter(mContext,R.layout.category_item, listsCat);
+             ListView ViewCat=findViewById(R.id.listCat);
              ViewCat.setAdapter(mAdapter);
              ViewCat.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                  @Override

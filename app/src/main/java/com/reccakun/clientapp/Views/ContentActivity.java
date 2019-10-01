@@ -7,6 +7,11 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
  import android.os.Bundle;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.google.android.material.tabs.TabLayout;
 import com.reccakun.clientapp.Controllers.DBConnect;
 import com.reccakun.clientapp.Models.CostumMenu;
@@ -42,6 +47,8 @@ public class ContentActivity extends AppCompatActivity {
     int idC,idD,idItem;
     boolean isFavActivity;
      ImageView imgBack;
+    private AdView mAdView;
+
     @TargetApi(Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +56,16 @@ public class ContentActivity extends AppCompatActivity {
         setContentView(R.layout.activity_content);
         dbDreams=new DBConnect(getApplicationContext());
 try{
+    MobileAds.initialize(this, new OnInitializationCompleteListener() {
+        @Override
+        public void onInitializationComplete(InitializationStatus initializationStatus) {
+        }
+    });
+
+    mAdView = findViewById(R.id.adView2);
+    AdRequest adRequest = new AdRequest.Builder().build();
+    mAdView.loadAd(adRequest);
+
       this.getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
     getSupportActionBar().setDisplayShowCustomEnabled(true);
     getSupportActionBar().setCustomView(R.layout.custom_action_bar);

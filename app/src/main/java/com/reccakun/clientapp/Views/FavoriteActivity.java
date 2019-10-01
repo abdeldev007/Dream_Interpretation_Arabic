@@ -64,7 +64,7 @@ public class FavoriteActivity extends AppCompatActivity {
             dbDreams=new DBConnect(getApplicationContext());
             listDreams=dbDreams.getFavDreams();
             copyList=dbDreams.getFavDreams();
-            mAdapter=new FavDreamAdapter(mContext,R.layout.courses_item, listDreams);
+            mAdapter=new FavDreamAdapter(mContext,R.layout.dreams_item, listDreams);
             ListView listViewCourses=findViewById(R.id.listview_fav_dreams);
             listViewCourses.setAdapter(mAdapter);
               home=findViewById(R.id.homeBtn);
