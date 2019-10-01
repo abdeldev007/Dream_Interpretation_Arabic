@@ -1,7 +1,10 @@
 package com.reccakun.clientapp.Views;
 
+import android.annotation.SuppressLint;
 import android.app.ActionBar;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -34,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
 
     private AdView mAdView;
 
+    @SuppressLint("WrongConstant")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -128,6 +132,36 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed () {
+// alertdialog for exit the app
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
 
+// set the title of the Alert Dialog
+        alertDialogBuilder.setTitle("الخروج من التطبيق");
+
+// set dialog message
+        alertDialogBuilder
+                .setMessage("هل أنت مأكد!!")
+                .setCancelable(false)
+                .setPositiveButton("نعم",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog,
+                                        int id) {
+                        // what to do if YES is tapped
+                        finishAffinity();
+                        System.exit(0);
+                    }
+                    } )
+                    .setNegativeButton("لا",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog,
+                                        int id) {
+                        // code to do on NO tapped
+                        dialog.cancel();
+                    }
+                });
+
+        AlertDialog alertDialog = alertDialogBuilder.create();
+
+        alertDialog.show();
     }
 }
