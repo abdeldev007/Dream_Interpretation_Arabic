@@ -53,7 +53,7 @@ public class CategoriesAdapter extends ArrayAdapter<Category>  {
             viewHolder.catTitle =view.findViewById(R.id.txt_catTile);
             viewHolder.catDes =view.findViewById(R.id.txt_CatDesc);
             viewHolder.catImg =view.findViewById(R.id.img_Alphabet);
-            viewHolder.frameLayout=view.findViewById(R.id.itemGrid);
+           // viewHolder.frameLayout=view.findViewById(R.id.itemGrid);
 
 
             view.setTag(viewHolder);
