@@ -12,7 +12,7 @@ import com.reccakun.clientapp.R;
 
 public class ads {
 
-
+    public static int countShowAds;
     public static InterstitialAd interstitialAd;
     public static Context context;
     public static ads adsInstence;
