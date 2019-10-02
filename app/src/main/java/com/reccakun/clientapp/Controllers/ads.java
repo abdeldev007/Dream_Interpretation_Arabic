@@ -16,35 +16,27 @@ public class ads {
     public static InterstitialAd interstitialAd;
     public static Context context;
     public static ads adsInstence;
-    public static ads getInstance(Context context){
+    public  void getInstance(Context context){
         if (adsInstence==null){
             adsInstence=new ads();
             interstitialAd=new InterstitialAd(context);
             interstitialAd.setAdUnitId(context.getResources().getString(R.string.interstitial));
         }
-
-
-        return adsInstence;
-
     }
-    public void loadInter(){
+    public  void loadInter(){
         if (!interstitialAd.isLoaded())
         interstitialAd.loadAd(gdpr(context));
     }
 
 
-    public void showads(){
+    public   void showads(){
         if (interstitialAd.isLoaded())
             interstitialAd.show();
         loadInter();
-
     }
-
     public InterstitialAd interstitialAdInstence(){
         return interstitialAd;
     }
-
-
     public static AdRequest gdpr(Context context) {
         AdRequest request;
         if (ConsentInformation.getInstance(context).isRequestLocationInEeaOrUnknown()) {

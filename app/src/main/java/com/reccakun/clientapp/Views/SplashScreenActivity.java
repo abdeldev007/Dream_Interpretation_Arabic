@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.widget.TextView;
 
 import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar;
+import com.reccakun.clientapp.Controllers.ads;
 import com.reccakun.clientapp.R;
 
 public class SplashScreenActivity extends AppCompatActivity {
@@ -20,6 +21,7 @@ public class SplashScreenActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
            a =0;
+        ads.countShowAds=0;
           textView=findViewById(R.id.textView);
           progress1 = (RoundCornerProgressBar) findViewById(R.id.loader);
         progress1.setProgressColor(Color.parseColor("#FF2196F3"));

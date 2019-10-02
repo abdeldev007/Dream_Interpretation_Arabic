@@ -68,6 +68,7 @@ this.vp=vp;
                 btnNext.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        ads.countShowAds++;
 
                         vp.setCurrentItem(vp.getCurrentItem()+1);
                     }
@@ -75,6 +76,7 @@ this.vp=vp;
                 btnPrev.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        ads.countShowAds++;
 
                         vp.setCurrentItem(vp.getCurrentItem()-1);
                     }
@@ -99,6 +101,7 @@ this.vp=vp;
             btnAddFav.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    ads.countShowAds++;
                     if (dbDreams.isFavorite(ld.get(position).getDream_ID())){
 
                         if (dbDreams.updateHandler( ld.get(position).getDream_ID(),-1 )){

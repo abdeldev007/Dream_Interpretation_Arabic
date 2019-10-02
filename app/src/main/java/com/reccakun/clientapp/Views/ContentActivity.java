@@ -1,5 +1,6 @@
 package com.reccakun.clientapp.Views;
 
+import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
@@ -9,11 +10,13 @@ import android.graphics.drawable.ColorDrawable;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.initialization.InitializationStatus;
 import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.google.android.material.tabs.TabLayout;
 import com.reccakun.clientapp.Controllers.DBConnect;
+import com.reccakun.clientapp.Controllers.ads;
 import com.reccakun.clientapp.Models.CostumMenu;
 import com.reccakun.clientapp.Models.Dream;
 import com.reccakun.clientapp.Controllers.ViewPagerAdapter;
@@ -48,7 +51,9 @@ public class ContentActivity extends AppCompatActivity {
     boolean isFavActivity;
      ImageView imgBack;
     private AdView mAdView;
+    private InterstitialAd mInterstitialAd;
 
+    @SuppressLint("WrongConstant")
     @TargetApi(Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,11 +61,14 @@ public class ContentActivity extends AppCompatActivity {
         setContentView(R.layout.activity_content);
         dbDreams=new DBConnect(getApplicationContext());
 try{
+
+
     MobileAds.initialize(this, new OnInitializationCompleteListener() {
         @Override
         public void onInitializationComplete(InitializationStatus initializationStatus) {
         }
     });
+
 
     mAdView = findViewById(R.id.adView2);
     AdRequest adRequest = new AdRequest.Builder().build();

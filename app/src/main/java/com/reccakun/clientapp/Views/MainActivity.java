@@ -23,6 +23,7 @@ import com.google.android.gms.ads.initialization.InitializationStatus;
 import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.reccakun.clientapp.Controllers.DBConnect;
 import com.reccakun.clientapp.Controllers.CategoriesAdapter;
+import com.reccakun.clientapp.Controllers.ads;
 import com.reccakun.clientapp.Models.Category;
 import com.reccakun.clientapp.Models.CostumMenu;
 import com.reccakun.clientapp.R;
@@ -42,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         MobileAds.initialize(this, new OnInitializationCompleteListener() {
             @Override
             public void onInitializationComplete(InitializationStatus initializationStatus) {
