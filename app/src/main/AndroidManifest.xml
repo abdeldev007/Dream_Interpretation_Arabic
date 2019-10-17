@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.reccakun.clientapp">
+    package="com.reccakun.clientappiptv">
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -18,7 +18,7 @@
             android:value="@string/admob_app_id" />
 
         <activity
-            android:name=".Views.SplashScreenActivity"
+            android:name="com.reccakun.clientappiptv.Views.SplashScreenActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
 
 
@@ -29,14 +29,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Views.FavoriteActivity">
+        <activity android:name="com.reccakun.clientappiptv.Views.FavoriteActivity">
 
         </activity>
-        <activity android:name=".Views.ContentActivity">
+        <activity android:name="com.reccakun.clientappiptv.Views.ContentActivity">
 
         </activity>
-        <activity android:name=".Views.ListsContentActivity" />
-        <activity android:name=".Views.MainActivity">
+        <activity android:name="com.reccakun.clientappiptv.Views.ListsContentActivity" />
+        <activity android:name="com.reccakun.clientappiptv.Views.MainActivity">
 
         </activity>
     </application>
