@@ -215,10 +215,7 @@ List<Dream> listDreams;
         int id = item.getItemId();
 
         switch (id) {
-            case R.id.action_home: {
 
-                break;
-            }
 
             case R.id.action_search: {
 

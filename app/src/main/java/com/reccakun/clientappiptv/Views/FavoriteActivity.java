@@ -176,10 +176,7 @@ public class FavoriteActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         switch (id) {
-            case R.id.action_home: {
 
-                break;
-            }
 
             case R.id.action_search: {
 
