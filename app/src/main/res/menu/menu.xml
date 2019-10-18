@@ -11,11 +11,7 @@
         android:icon="@android:drawable/btn_star"
         android:title=""
         app:showAsAction="always" />
-    <item
-        android:id="@+id/action_home"
-        android:icon="@drawable/house"
-        android:title=""
-        app:showAsAction="always" />
+
     <item
         android:id="@+id/action_gdbr"
         android:icon="@drawable/hheart"
