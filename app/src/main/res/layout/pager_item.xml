@@ -2,34 +2,37 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimary"
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/txt_pageTitle"
         android:layout_width="match_parent"
         android:layout_height="30dp"
-        android:background="#E6FFEF74"
+        android:background="@color/colorPrimary"
         android:gravity="center_horizontal"
         android:shadowColor="@android:color/background_dark"
         android:shadowDx="0.4"
         android:shadowDy="0.4"
         android:shadowRadius="1"
         android:text="TextView"
-        android:textColor="@color/colorAccent"
+        android:textColor="@color/browser_actions_bg_grey"
         android:textSize="24sp" />
 
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="match_parent"
         android:layout_height="40dp"
+        android:background="@color/colorPrimary"
         app:srcCompat="@drawable/refer_icon" />
 
     <View
         android:id="@+id/view"
         android:layout_width="match_parent"
         android:layout_height="2dp"
-        android:background="@drawable/drawable_gradient_animation_list" />
+        android:background="@drawable/drawable_colorc_gradient" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -49,7 +52,8 @@
                 android:id="@+id/txt_content"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                android:textColor="#FFFFFF" />
         </LinearLayout>
     </ScrollView>
 
@@ -57,7 +61,7 @@
         android:id="@+id/view2"
         android:layout_width="match_parent"
         android:layout_height="2dp"
-        android:background="@drawable/drawable_gradient_animation_list" />
+        android:background="@drawable/drawable_colorc_gradient" />
 
     <LinearLayout
         android:layout_width="match_parent"

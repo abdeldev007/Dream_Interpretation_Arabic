@@ -32,6 +32,7 @@
             android:fontFamily="@font/font1"
             android:gravity="center_vertical"
             android:text="TextView"
+            android:textColor="@color/browser_actions_bg_grey"
             android:textDirection="rtl"
             android:textSize="12sp" />
 
