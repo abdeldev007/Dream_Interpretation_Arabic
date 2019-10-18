@@ -153,12 +153,7 @@ public class FavoriteActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         switch (id) {
-            case R.id.action_home: {
-                Intent i = new Intent(FavoriteActivity.this, MainActivity.class);
 
-                startActivity(i);
-                break;
-            }
 
             case R.id.action_search: {
 

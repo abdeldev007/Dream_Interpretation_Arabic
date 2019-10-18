@@ -184,12 +184,7 @@ List<Dream> listDreams;
         int id = item.getItemId();
 
         switch (id) {
-            case R.id.action_home: {
-                Intent i = new Intent(ListsContentActivity.this, MainActivity.class);
 
-                startActivity(i);
-                break;
-            }
 
             case R.id.action_search: {
 

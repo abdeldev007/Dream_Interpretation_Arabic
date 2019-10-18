@@ -4,8 +4,8 @@
     android:id="@+id/layoutDream"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="11dp"
-    android:layoutDirection="ltr">
+    android:layoutDirection="ltr"
+    android:background="@color/flatui_wet_asphalt">
 
     <TextView
         android:id="@+id/txt_desc"
@@ -32,6 +32,8 @@
             android:fontFamily="@font/font1"
             android:gravity="center_vertical"
             android:text="TextView"
+            android:layout_gravity="center_vertical"
+            android:textColor="@color/white"
             android:textDirection="rtl"
             android:textSize="12sp" />
 
@@ -53,9 +55,4 @@
 
     </LinearLayout>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_gravity="bottom|start"
-        android:background="@drawable/drawable_purple_gradient" />
 </FrameLayout>
