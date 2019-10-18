@@ -2,7 +2,8 @@ package com.reccakun.clientappiptv.Controllers;
 
 
 import android.content.Context;
- import android.view.LayoutInflater;
+import android.content.Intent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -13,6 +14,7 @@ import android.widget.Toast;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import com.reccakun.clientappiptv.BuildConfig;
 import com.reccakun.clientappiptv.Models.Dream;
 import com.reccakun.clientappiptv.R;
 
@@ -51,15 +53,17 @@ this.vp=vp;
     @Override
     public Object instantiateItem(ViewGroup container, final int position) {
 
-               View itemView = mLayoutInflater.inflate(R.layout.pager_item, container, false);
+               final View itemView = mLayoutInflater.inflate(R.layout.pager_item, container, false);
 
         TextView txtContent = (TextView) itemView.findViewById(R.id.txt_content);
         txtContent.setText(ld.get(position).getContent());
         TextView title = (TextView) itemView.findViewById(R.id.txt_pageTitle);
+
         title.setText(ld.get(position).getTitle());
         container.addView(itemView);
         dbDreams=new DBConnect(mContext.getApplicationContext());
         final ImageView btnAddFav = itemView.findViewById(R.id.btnAddFavorite);
+        final ImageView btnShare=itemView.findViewById(R.id.shareContent);
         if (isFavActivity){
             try{
                 ImageView btnNext=itemView.findViewById(R.id.btnNext);
@@ -80,6 +84,8 @@ this.vp=vp;
                         vp.setCurrentItem(vp.getCurrentItem()-1);
                     }
                 });
+
+
             }catch (Exception e){
                 Toast.makeText(mContext, e.getMessage(), Toast.LENGTH_SHORT).show();
             }
@@ -92,7 +98,6 @@ this.vp=vp;
                 //btnAddFav.setText("اضافة للمفضلة");
 
             }
-
 
 
 
@@ -165,6 +170,20 @@ this.vp=vp;
             });
         }
 
+        btnShare.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent shareIntent = new Intent(Intent.ACTION_SEND);
+                shareIntent.setType("text/plain");
+                shareIntent.putExtra(Intent.EXTRA_SUBJECT, "My application name");
+                String shareMessage = "\n"+ld.get(position).getTitle()+"\n"+
+                        ld.get(position).getContent();
+                shareMessage = shareMessage + "https://play.google.com/store/apps/details?id=" + BuildConfig.APPLICATION_ID + "\n\n";
+                shareIntent.putExtra(Intent.EXTRA_TEXT, shareMessage);
+                mContext.startActivity(shareIntent);
+            }
+        });
 
 
         return itemView;

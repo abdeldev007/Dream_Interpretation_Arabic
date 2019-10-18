@@ -91,7 +91,7 @@
             app:srcCompat="@drawable/heart" />
 
         <ImageView
-            android:id="@+id/btnAddFavorite3"
+            android:id="@+id/shareContent"
             android:layout_width="match_parent"
             android:layout_height="30dp"
             android:layout_marginStart="1dp"
