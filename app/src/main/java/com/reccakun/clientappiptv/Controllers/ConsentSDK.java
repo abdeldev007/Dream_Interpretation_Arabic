@@ -47,6 +47,7 @@ public class ConsentSDK {
         this.consentSDK = this;
     }
 
+
     // Initialize production
     public ConsentSDK(Context context, String publisherId, String privacyURL) {
         this.context = context;
@@ -61,7 +62,7 @@ public class ConsentSDK {
         AdView adView = new AdView(context);
         adView.setAdSize(AdSize.BANNER);
         adView.setAdUnitId(DUMMY_BANNER);
-        adView.loadAd(ConsentSDK.getAdRequest(context));
+        adView.loadAd(new AdRequest.Builder().build());
     }
 
     // Initialize SharedPreferences
@@ -78,6 +79,7 @@ public class ConsentSDK {
     // Get AdRequest
     public static AdRequest getAdRequest(Context context) {
         if (isConsentPersonalized(context)) {
+
             return new AdRequest.Builder().build();
         } else {
             return new AdRequest.Builder()

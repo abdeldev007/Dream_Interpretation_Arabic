@@ -8,13 +8,20 @@
 
     <string name="privacy_url">http://www.dev3pro.com/index/privacy_policy.html</string>
 
-    <string name="publisher_id">pub-6560477533466499</string>
     <string name="admob_app_id" translatable="false">ca-app-pub-3940256099942544~3347511713</string>
     <string name="admob_banner_id">ca-app-pub-3940256099942544/6300978111</string>
     <string name="interstitial">ca-app-pub-3940256099942544/1033173712</string>
-    <string name="native_ads">ca-app-pub-6560477533466455/3116762556</string>
-    <string name="search">Search</string>
+     <string name="search">Search</string>
     <string name="gdbr">GDBR</string>
     <string name="about">About</string>
+    <string name="url_privacy">ENTER YOUR PRIVACY</string>
+    <string name="dialog_close_msg">ARE YOU SURE YOU WANT TO QUITE </string>
+    <string name="publisher_id">pub-3940256099942544</string>
+
+     <string name="app_id">ca-app-pub-3940256099942544~3347511713</string>
+    <string name="ad_inter">ca-app-pub-3940256099942544/1033173712</string>
+    <string name="ad_banner">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="native_ads" translatable="false">ca-app-pub-3940256099942544/2247696110</string>
+
 
 </resources>
