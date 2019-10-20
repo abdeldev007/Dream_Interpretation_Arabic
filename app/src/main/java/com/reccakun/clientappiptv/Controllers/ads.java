@@ -6,38 +6,71 @@ import android.os.Bundle;
 import com.google.ads.consent.ConsentInformation;
 import com.google.ads.consent.ConsentStatus;
 import com.google.ads.mediation.admob.AdMobAdapter;
+import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
+import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.InterstitialAd;
-import com.reccakun.clientappiptv.R;
+import com.reccakun.clientappiptv.Views.ListsContentActivity;
+import com.reccakun.clientappiptv.Views.MainActivity;
 
 public class ads {
 
-    public static int countShowAds;
-    public static InterstitialAd interstitialAd;
-    public static Context context;
-    public static ads adsInstence;
-    public  void getInstance(Context context){
-        if (adsInstence==null){
-            adsInstence=new ads();
-            interstitialAd=new InterstitialAd(context);
-            interstitialAd.setAdUnitId(context.getResources().getString(R.string.interstitial));
+    public InterstitialAd interstitialAd;
+    public AdView adView;
+    public static boolean isInterLoad = false;
+    public static ads instence;
+    public static int cout_ads = -2;
+
+
+    public static ads getinstence() {
+
+        if (instence == null) {
+            instence = new ads();
         }
-    }
-    public  void loadInter(){
-        if (!interstitialAd.isLoaded())
-        interstitialAd.loadAd(gdpr(context));
+        return instence;
     }
 
 
-    public   void showads(){
-        if (interstitialAd.isLoaded())
+    public void interInstence(Context context) {
+        if (interstitialAd == null){
+            interstitialAd = new InterstitialAd(context);
+            interstitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
+            interstitialAd.loadAd(ConsentSDK.getAdRequest(context));
+        }
+
+    }
+
+    public void banner(Context context) {
+        if (adView == null)
+            adView = new AdView(context);
+        adView.setAdSize(AdSize.SMART_BANNER);
+        adView.setAdUnitId("ca-app-pub-3940256099942544/6300978111");
+        adView.loadAd(adRequest(context));
+    }
+
+    public void showads(Context context) {
+
+        if (interstitialAd.isLoaded()) {
             interstitialAd.show();
-        loadInter();
+            isInterLoad = false;
+        } else {
+            loadads(context);
+        }
+
     }
-    public InterstitialAd interstitialAdInstence(){
+
+    public void loadads(Context context) {
+        if (!interstitialAd.isLoaded())
+            interstitialAd.loadAd(ConsentSDK.getAdRequest(context));
+    }
+
+    public InterstitialAd interstitialAd(){
         return interstitialAd;
     }
-    public static AdRequest gdpr(Context context) {
+
+
+    public static AdRequest adRequest(Context context) {
         AdRequest request;
         if (ConsentInformation.getInstance(context).isRequestLocationInEeaOrUnknown()) {
             if (ConsentInformation.getInstance(context).getConsentStatus() == ConsentStatus.PERSONALIZED) {
@@ -53,5 +86,42 @@ public class ads {
             request = new AdRequest.Builder().build();
         }
         return request;
+    }
+
+    public void Event() {
+        interstitialAd.setAdListener(new AdListener() {
+            @Override
+            public void onAdLoaded() {
+                // Code to be executed when an ad finishes loading.
+                isInterLoad = true;
+            }
+
+            @Override
+            public void onAdFailedToLoad(int errorCode) {
+                // Code to be executed when an ad request fails.
+                isInterLoad = false;
+            }
+
+            @Override
+            public void onAdOpened() {
+                // Code to be executed when the ad is displayed.
+            }
+
+            @Override
+            public void onAdClicked() {
+                // Code to be executed when the user clicks on an ad.
+            }
+
+            @Override
+            public void onAdLeftApplication() {
+                // Code to be executed when the user has left the app.
+            }
+
+            @Override
+            public void onAdClosed() {
+                // Code to be executed when the interstitial ad is closed.
+
+            }
+        });
     }
 }

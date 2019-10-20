@@ -75,30 +75,33 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        context = this;
-        MobileAds.initialize(this, new OnInitializationCompleteListener() {
-            @Override
-            public void onInitializationComplete(InitializationStatus initializationStatus) {
-            }
-        });
-        mAdView = findViewById(R.id.adView);
-        AdRequest adRequest = new AdRequest.Builder().build();
-        mAdView.loadAd(ConsentSDK.getAdRequest(context));
-
-        MobileAds.initialize(this,
-                getString(R.string.app_id));
-        consentSDK = new ConsentSDK.Builder(this)
-                .addPrivacyPolicy(getString(R.string.url_privacy)) // Add your privacy policy url
-                .addPublisherId(getString(R.string.publisher_id)) // Add your admob publisher id
-                .build();
-        consentSDK.checkConsent(new ConsentSDK.ConsentCallback() {
-            @Override
-            public void onResult(boolean isRequestLocationInEeaOrUnknown) {
-
-            }
-        });
-
         try {
+            context = this;
+            manager=ads.getinstence();
+            manager.interInstence(context);
+            manager.loadads(context);
+            MobileAds.initialize(this, new OnInitializationCompleteListener() {
+                @Override
+                public void onInitializationComplete(InitializationStatus initializationStatus) {
+                }
+            });
+            mAdView = findViewById(R.id.adView);
+            AdRequest adRequest = new AdRequest.Builder().build();
+            mAdView.loadAd(ConsentSDK.getAdRequest(context));
+
+            MobileAds.initialize(MainActivity.this,
+                    getString(R.string.app_id));
+            consentSDK = new ConsentSDK.Builder(this)
+                    .addPrivacyPolicy(getString(R.string.url_privacy)) // Add your privacy policy url
+                    .addPublisherId(getString(R.string.publisher_id)) // Add your admob publisher id
+                    .build();
+            consentSDK.checkConsent(new ConsentSDK.ConsentCallback() {
+                @Override
+                public void onResult(boolean isRequestLocationInEeaOrUnknown) {
+
+                }
+            });
+
             dbDreams = new DBConnect(mContext);
 
             copyList = new ArrayList<>();
@@ -148,10 +151,27 @@ public class MainActivity extends AppCompatActivity {
 
             //calculate distance
 
-            Intent intent = new Intent(this, ListsContentActivity.class);
+            final Intent intent = new Intent(this, ListsContentActivity.class);
             intent.putExtra("id", idCat);
 
-            startActivity(intent);
+            if (ads.cout_ads%4!=0){
+                startActivity(intent);
+            } else {
+                manager.showads(context);
+                manager.interstitialAd().setAdListener(new AdListener(){
+                    @Override
+                    public void onAdClosed() {
+                        super.onAdClosed();
+
+                    }
+                    @Override
+                    public void onAdFailedToLoad(int i) {
+                        super.onAdFailedToLoad(i);
+                        startActivity(intent);
+                    }
+                });
+            }
+            ads.cout_ads++;
             //   overridePendingTransition(R.anim.anim_show,R.anim.sd_scale_fade_and_translate_in);
 
         } catch (Exception e) {

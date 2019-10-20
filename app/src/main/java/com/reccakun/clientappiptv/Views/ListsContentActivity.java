@@ -28,7 +28,6 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RatingBar;
 import android.widget.SearchView;
-import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -48,6 +47,7 @@ import com.google.android.gms.ads.initialization.OnInitializationCompleteListene
 import com.reccakun.clientappiptv.BuildConfig;
 import com.reccakun.clientappiptv.Controllers.ConsentSDK;
 import com.reccakun.clientappiptv.Controllers.DBConnect;
+import com.reccakun.clientappiptv.Controllers.ads;
 import com.reccakun.clientappiptv.Models.Dream;
 import com.reccakun.clientappiptv.Controllers.DreamAdapter;
 import com.reccakun.clientappiptv.R;
@@ -67,32 +67,44 @@ List<Dream> listDreams;
     private ImageView back;
     private AdView mAdView;
     private SearchView mSearchView;
-   static Context context;
+ public   static Context context;
     private ConsentSDK consentSDK;
     private UnifiedNativeAd nativeAd;
     private FrameLayout frameLayout;
     private View v;
-
-    @Override
+    ads manager;
+     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dreams);
         context=this;
         try{
 
+            context = this;
+            manager=ads.getinstence();
+            manager.interInstence(context);
+            manager.loadads(context);
             MobileAds.initialize(this, new OnInitializationCompleteListener() {
                 @Override
                 public void onInitializationComplete(InitializationStatus initializationStatus) {
                 }
             });
-
             mAdView = findViewById(R.id.adView2);
             AdRequest adRequest = new AdRequest.Builder().build();
-            mAdView.loadAd(adRequest);
+            mAdView.loadAd(ConsentSDK.getAdRequest(context));
 
+            MobileAds.initialize(ListsContentActivity.this,
+                    getString(R.string.app_id));
+            consentSDK = new ConsentSDK.Builder(this)
+                    .addPrivacyPolicy(getString(R.string.url_privacy)) // Add your privacy policy url
+                    .addPublisherId(getString(R.string.publisher_id)) // Add your admob publisher id
+                    .build();
+            consentSDK.checkConsent(new ConsentSDK.ConsentCallback() {
+                @Override
+                public void onResult(boolean isRequestLocationInEeaOrUnknown) {
 
-
-
+                }
+            });
 
 
                //     Intent i=new Intent(ListsContentActivity.this,MainActivity.class);
@@ -122,15 +134,31 @@ List<Dream> listDreams;
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long idL) {
 
-                  Intent i =new Intent(ListsContentActivity.this,ContentActivity.class);
+                 final Intent intent =new Intent(ListsContentActivity.this,ContentActivity.class);
                   int idItem=  position;
-                  i.putExtra("idDream", listDreams.get(position).getDream_ID());
-                  i.putExtra("idCat",   id);
-                  i.putExtra("idItem",   idItem);
-                  i.putExtra("isFav",   false);
+                    intent.putExtra("idDream", listDreams.get(position).getDream_ID());
+                    intent.putExtra("idCat",   id);
+                    intent.putExtra("idItem",   idItem);
+                    intent.putExtra("isFav",   false);
 
-                    startActivity(i);
-          }
+                     if (ads.cout_ads%6!=0){
+                        startActivity(intent);
+                    } else {
+                        manager.showads(context);
+                        manager.interstitialAd().setAdListener(new AdListener(){
+                            @Override
+                            public void onAdClosed() {
+                                super.onAdClosed();
+                            }
+                            @Override
+                            public void onAdFailedToLoad(int i) {
+                                super.onAdFailedToLoad(i);
+                                startActivity(intent);
+                            }
+                        });
+                    }
+                    ads.cout_ads++;
+                }
           });
 
         }catch (Exception e){
