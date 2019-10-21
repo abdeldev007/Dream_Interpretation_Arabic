@@ -10,6 +10,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.reccakun.clientappiptv.Models.Dream;
 import com.reccakun.clientappiptv.R;
@@ -64,7 +65,7 @@ public class FavDreamAdapter extends ArrayAdapter<Dream> {
     class ViewHolder {
         TextView CourseTitle;
         TextView CourseDesc;
-        FrameLayout layoutDream;
+        ConstraintLayout layoutDream;
 
     }
 }
