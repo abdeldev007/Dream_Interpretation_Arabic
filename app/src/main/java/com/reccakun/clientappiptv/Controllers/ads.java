@@ -11,16 +11,16 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.InterstitialAd;
-import com.reccakun.clientappiptv.Views.ListsContentActivity;
-import com.reccakun.clientappiptv.Views.MainActivity;
+
 
 public class ads {
 
-    public InterstitialAd interstitialAd;
-    public AdView adView;
     public static boolean isInterLoad = false;
     public static ads instence;
     public static int cout_ads = -2;
+    public InterstitialAd interstitialAd;
+    public AdView adView;
+    public Context context;
 
 
     public static ads getinstence() {
@@ -30,45 +30,6 @@ public class ads {
         }
         return instence;
     }
-
-
-    public void interInstence(Context context) {
-        if (interstitialAd == null){
-            interstitialAd = new InterstitialAd(context);
-            interstitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
-            interstitialAd.loadAd(ConsentSDK.getAdRequest(context));
-        }
-
-    }
-
-    public void banner(Context context) {
-        if (adView == null)
-            adView = new AdView(context);
-        adView.setAdSize(AdSize.SMART_BANNER);
-        adView.setAdUnitId("ca-app-pub-3940256099942544/6300978111");
-        adView.loadAd(adRequest(context));
-    }
-
-    public void showads(Context context) {
-
-        if (interstitialAd.isLoaded()) {
-            interstitialAd.show();
-            isInterLoad = false;
-        } else {
-            loadads(context);
-        }
-
-    }
-
-    public void loadads(Context context) {
-        if (!interstitialAd.isLoaded())
-            interstitialAd.loadAd(ConsentSDK.getAdRequest(context));
-    }
-
-    public InterstitialAd interstitialAd(){
-        return interstitialAd;
-    }
-
 
     public static AdRequest adRequest(Context context) {
         AdRequest request;
@@ -86,6 +47,44 @@ public class ads {
             request = new AdRequest.Builder().build();
         }
         return request;
+    }
+
+    public void interInstence(Context context) {
+        if (interstitialAd == null) {
+            this.context = context;
+            interstitialAd = new InterstitialAd(context);
+            interstitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
+            interstitialAd.loadAd(ConsentSDK.getAdRequest(context));
+        }
+
+    }
+
+    public void banner(Context context) {
+        if (adView == null)
+            adView = new AdView(context);
+        adView.setAdSize(AdSize.SMART_BANNER);
+        adView.setAdUnitId("ca-app-pub-3940256099942544/6300978111");
+        adView.loadAd(adRequest(context));
+    }
+
+    public void showads() {
+
+        if (interstitialAd.isLoaded()) {
+            interstitialAd.show();
+            isInterLoad = false;
+        } else {
+            loadads();
+        }
+
+    }
+
+    public void loadads() {
+        if (!interstitialAd.isLoaded())
+            interstitialAd.loadAd(ConsentSDK.getAdRequest(context));
+    }
+
+    public InterstitialAd interstitialAd() {
+        return interstitialAd;
     }
 
     public void Event() {

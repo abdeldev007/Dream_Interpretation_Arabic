@@ -1,10 +1,8 @@
-<com.google.android.gms.ads.formats.UnifiedNativeAdView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.gms.ads.formats.UnifiedNativeAdView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -12,15 +10,15 @@
         android:minHeight="50dp"
         android:orientation="vertical">
 
-        <TextView style="@style/AppTheme.AdAttribution"/>
+        <TextView style="@style/AppTheme.AdAttribution" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:paddingLeft="20dp"
-            android:paddingRight="20dp"
-            android:paddingTop="3dp">
+            android:paddingTop="3dp"
+            android:paddingRight="20dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -32,9 +30,9 @@
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:adjustViewBounds="true"
-                    android:paddingBottom="5dp"
                     android:paddingEnd="5dp"
-                    android:paddingRight="5dp"/>
+                    android:paddingRight="5dp"
+                    android:paddingBottom="5dp" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -60,7 +58,7 @@
                             android:gravity="bottom"
                             android:textColor="@color/flatui_emerald"
                             android:textSize="11sp"
-                            android:textStyle="normal"/>
+                            android:textStyle="normal" />
 
                         <RatingBar
                             android:id="@+id/ad_stars"
@@ -84,34 +82,32 @@
                     android:id="@+id/ad_body"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginEnd="20dp"
                     android:layout_marginRight="20dp"
                     android:textColor="@color/flatui_wet_asphalt"
-                    android:layout_marginEnd="20dp"
                     android:textSize="12sp" />
 
                 <com.google.android.gms.ads.formats.MediaView
                     android:id="@+id/ad_media"
-                    android:layout_gravity="center_horizontal"
                     android:layout_width="wrap_content"
                     android:layout_height="170dp"
-                     />
+                    android:layout_gravity="center_horizontal" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:gravity="right"
-                    android:orientation="horizontal"
-                    >
+                    android:orientation="horizontal">
 
                     <TextView
                         android:id="@+id/ad_price"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:paddingLeft="5dp"
                         android:paddingStart="5dp"
-                        android:paddingRight="5dp"
+                        android:paddingLeft="5dp"
                         android:paddingEnd="5dp"
+                        android:paddingRight="5dp"
                         android:textSize="12sp" />
 
                     <TextView
@@ -123,13 +119,13 @@
 
                     <Button
                         android:id="@+id/ad_call_to_action"
-                        android:background="@color/flatui_alizarin"
                         android:layout_width="match_parent"
                         android:layout_height="40dp"
+                        android:layout_marginBottom="6dp"
+                        android:background="@color/flatui_alizarin"
                         android:gravity="center"
-                        android:textSize="12sp"
                         android:textColor="@color/color4"
-                        android:layout_marginBottom="6dp"/>
+                        android:textSize="12sp" />
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>

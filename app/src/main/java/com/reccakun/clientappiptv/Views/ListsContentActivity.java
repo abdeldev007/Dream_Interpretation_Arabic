@@ -7,9 +7,6 @@ import android.app.SearchableInfo;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
-
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -31,9 +28,10 @@ import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdLoader;
-import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.VideoController;
@@ -47,126 +45,108 @@ import com.google.android.gms.ads.initialization.OnInitializationCompleteListene
 import com.reccakun.clientappiptv.BuildConfig;
 import com.reccakun.clientappiptv.Controllers.ConsentSDK;
 import com.reccakun.clientappiptv.Controllers.DBConnect;
+import com.reccakun.clientappiptv.Controllers.DreamAdapter;
 import com.reccakun.clientappiptv.Controllers.ads;
 import com.reccakun.clientappiptv.Models.Dream;
-import com.reccakun.clientappiptv.Controllers.DreamAdapter;
 import com.reccakun.clientappiptv.R;
 
 import java.util.List;
 import java.util.Locale;
 
 public class ListsContentActivity extends AppCompatActivity {
-DreamAdapter mAdapter;
-Context mContext= ListsContentActivity.this;
-List<Dream> listDreams;
-    DBConnect dbDreams ;
-    private EditText search;
+    static Context context;
+    DreamAdapter mAdapter;
+    Context mContext = ListsContentActivity.this;
+    List<Dream> listDreams;
+    DBConnect dbDreams;
     List<Dream> copyList;
     int id;
     ImageView home;
+    private EditText search;
     private ImageView back;
     private AdView mAdView;
     private SearchView mSearchView;
- public   static Context context;
     private ConsentSDK consentSDK;
     private UnifiedNativeAd nativeAd;
     private FrameLayout frameLayout;
     private View v;
-    ads manager;
-     @Override
+    private ads manager;
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dreams);
-        context=this;
-        try{
+        context = this;
+        manager = ads.getinstence();
+        manager.interInstence(context);
+        manager.loadads();
+        try {
 
-            context = this;
-            manager=ads.getinstence();
-            manager.interInstence(context);
-            manager.loadads(context);
             MobileAds.initialize(this, new OnInitializationCompleteListener() {
                 @Override
                 public void onInitializationComplete(InitializationStatus initializationStatus) {
                 }
             });
+
             mAdView = findViewById(R.id.adView2);
-            AdRequest adRequest = new AdRequest.Builder().build();
-            mAdView.loadAd(ConsentSDK.getAdRequest(context));
-
-            MobileAds.initialize(ListsContentActivity.this,
-                    getString(R.string.app_id));
-            consentSDK = new ConsentSDK.Builder(this)
-                    .addPrivacyPolicy(getString(R.string.url_privacy)) // Add your privacy policy url
-                    .addPublisherId(getString(R.string.publisher_id)) // Add your admob publisher id
-                    .build();
-            consentSDK.checkConsent(new ConsentSDK.ConsentCallback() {
-                @Override
-                public void onResult(boolean isRequestLocationInEeaOrUnknown) {
-
-                }
-            });
+            mAdView.loadAd(ads.adRequest(this));
 
 
-               //     Intent i=new Intent(ListsContentActivity.this,MainActivity.class);
-                 //   startActivity(i);
+            //     Intent i=new Intent(ListsContentActivity.this,MainActivity.class);
+            //   startActivity(i);
 
-         //   back=findViewById(R.id.backitem);
+            //   back=findViewById(R.id.backitem);
 
 
-              //      Intent i=new Intent(ListsContentActivity.this,MainActivity.class);
-                //    startActivity(i);
+            //      Intent i=new Intent(ListsContentActivity.this,MainActivity.class);
+            //    startActivity(i);
 
-           // ImageView imgFav=view.findViewById(R.id.favitem);
+            // ImageView imgFav=view.findViewById(R.id.favitem);
 
             //    Intent intent=new Intent(ListsContentActivity.this,FavoriteActivity.class);
-          //      startActivity(intent);
+            //      startActivity(intent);
 
             Intent intent = getIntent();
-            id = (int)  intent.getSerializableExtra("id");
+            id = (int) intent.getSerializableExtra("id");
 
-            dbDreams=new DBConnect(getApplicationContext());
-            listDreams=dbDreams.getDreamsByCat(id);
-            copyList =  dbDreams.getDreamsByCat(id);
-            mAdapter=new DreamAdapter(mContext,R.layout.dreams_item, listDreams);
-            ListView listViewCourses=findViewById(R.id.listview_courses);
+            dbDreams = new DBConnect(getApplicationContext());
+            listDreams = dbDreams.getDreamsByCat(id);
+            copyList = dbDreams.getDreamsByCat(id);
+            mAdapter = new DreamAdapter(mContext, R.layout.dreams_item, listDreams);
+            ListView listViewCourses = findViewById(R.id.listview_courses);
             listViewCourses.setAdapter(mAdapter);
             listViewCourses.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long idL) {
 
-                 final Intent intent =new Intent(ListsContentActivity.this,ContentActivity.class);
-                  int idItem=  position;
-                    intent.putExtra("idDream", listDreams.get(position).getDream_ID());
-                    intent.putExtra("idCat",   id);
-                    intent.putExtra("idItem",   idItem);
-                    intent.putExtra("isFav",   false);
-
-                     if (ads.cout_ads%6!=0){
-                        startActivity(intent);
-                    } else {
-                        manager.showads(context);
-                        manager.interstitialAd().setAdListener(new AdListener(){
-                            @Override
-                            public void onAdClosed() {
-                                super.onAdClosed();
-                            }
-                            @Override
-                            public void onAdFailedToLoad(int i) {
-                                super.onAdFailedToLoad(i);
-                                startActivity(intent);
-                            }
-                        });
-                    }
+                    final Intent i = new Intent(ListsContentActivity.this, ContentActivity.class);
+                    int idItem = position;
+                    i.putExtra("idDream", listDreams.get(position).getDream_ID());
+                    i.putExtra("idCat", id);
+                    i.putExtra("idItem", idItem);
+                    i.putExtra("isFav", false);
+                    if (ads.cout_ads % 5 == 0) {
+                        manager.showads();
+                        manager.loadads();
+                    } else
+                        startActivity(i);
+                    manager.interstitialAd.setAdListener(new AdListener() {
+                        @Override
+                        public void onAdClosed() {
+                            startActivity(i);
+                        }
+                    });
                     ads.cout_ads++;
                 }
-          });
+            });
 
-        }catch (Exception e){
-            Toast.makeText(mContext,"main " +e.getMessage(), Toast.LENGTH_SHORT).show();
+        } catch (Exception e) {
+            Toast.makeText(mContext, "main " + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
 
     }
-     private void setupSearchView() {
+
+    private void setupSearchView() {
 
         mSearchView.setIconifiedByDefault(true);
 
@@ -214,10 +194,10 @@ List<Dream> listDreams;
 
                     mAdapter.notifyDataSetChanged();
                     return false;
-                        // Toast.makeText(mContext," copy empty"+listsCat.get(0).getTvTitle(), Toast.LENGTH_SHORT).show();
+                    // Toast.makeText(mContext," copy empty"+listsCat.get(0).getTvTitle(), Toast.LENGTH_SHORT).show();
 
 
-                 }
+                }
             });
         }
 
@@ -256,8 +236,7 @@ List<Dream> listDreams;
                 break;
             }
 
-            case R.id.privacy:
-            {
+            case R.id.privacy: {
                 String url = getString(R.string.url_privacy);
                 Intent i = new Intent(Intent.ACTION_VIEW);
                 try {
@@ -266,8 +245,7 @@ List<Dream> listDreams;
                 } catch (Exception e) {
                 }
             }
-            case R.id.share:
-            {
+            case R.id.share: {
                 try {
                     Intent shareIntent = new Intent(Intent.ACTION_SEND);
                     shareIntent.setType("text/plain");
@@ -282,8 +260,7 @@ List<Dream> listDreams;
                 break;
             }
 
-            case R.id.apps:
-            {
+            case R.id.apps: {
                 try {
                     Uri uri = Uri.parse("market://details?id=" + getPackageName());
                     Intent goToMarket = new Intent(Intent.ACTION_VIEW, uri);
@@ -296,8 +273,7 @@ List<Dream> listDreams;
                 break;
             }
 
-            case R.id.rate:
-            {
+            case R.id.rate: {
                 try {
                     Uri uri = Uri.parse("market://details?id=" + getPackageName());
                     Intent goToMarket = new Intent(Intent.ACTION_VIEW, uri);
@@ -309,7 +285,7 @@ List<Dream> listDreams;
                 }
                 break;
             }
-            case R.id.action_gdbr:{
+            case R.id.action_gdbr: {
                 changegdpr(this);
                 break;
             }
@@ -332,6 +308,7 @@ List<Dream> listDreams;
         });
 
     }
+
     private void refreshAd() {
 
 
@@ -377,8 +354,9 @@ List<Dream> listDreams;
 
 
     }
+
     public void rateApp() {
-        try{
+        try {
 
 
             final AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -419,12 +397,13 @@ List<Dream> listDreams;
             lp.gravity = Gravity.CENTER;
             dialog.getWindow().setAttributes(lp);
 
-        }catch (Exception e){
+        } catch (Exception e) {
             Toast.makeText(mContext, e.getMessage(), Toast.LENGTH_SHORT).show();
         }
 
     }
-     private void populateUnifiedNativeAdView(UnifiedNativeAd nativeAd, UnifiedNativeAdView adView) {
+
+    private void populateUnifiedNativeAdView(UnifiedNativeAd nativeAd, UnifiedNativeAdView adView) {
         // Set the media view. Media content will be automatically populated in the media view once
         // adView.setNativeAd() is called.
         MediaView mediaView = adView.findViewById(R.id.ad_media);

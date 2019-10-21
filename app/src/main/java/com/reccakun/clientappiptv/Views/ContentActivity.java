@@ -1,46 +1,17 @@
 package com.reccakun.clientappiptv.Views;
 
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
-import android.app.Dialog;
+import android.annotation.TargetApi;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
-
-import com.google.android.gms.ads.AdListener;
-import com.google.android.gms.ads.AdLoader;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
-import com.google.android.gms.ads.InterstitialAd;
-import com.google.android.gms.ads.MobileAds;
-import com.google.android.gms.ads.VideoController;
-import com.google.android.gms.ads.VideoOptions;
-import com.google.android.gms.ads.formats.MediaView;
-import com.google.android.gms.ads.formats.NativeAdOptions;
-import com.google.android.gms.ads.formats.UnifiedNativeAd;
-import com.google.android.gms.ads.formats.UnifiedNativeAdView;
-import com.google.android.gms.ads.initialization.InitializationStatus;
-import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
-import com.reccakun.clientappiptv.BuildConfig;
-import com.reccakun.clientappiptv.Controllers.ConsentSDK;
-import com.reccakun.clientappiptv.Controllers.DBConnect;
-import com.reccakun.clientappiptv.Models.Dream;
-import com.reccakun.clientappiptv.Controllers.ViewPagerAdapter;
-import com.reccakun.clientappiptv.R;
-
-
-import android.annotation.TargetApi;
-        import android.os.Build;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RatingBar;
@@ -51,20 +22,38 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.InterstitialAd;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.VideoController;
+import com.google.android.gms.ads.formats.MediaView;
+import com.google.android.gms.ads.formats.UnifiedNativeAd;
+import com.google.android.gms.ads.formats.UnifiedNativeAdView;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
+import com.reccakun.clientappiptv.BuildConfig;
+import com.reccakun.clientappiptv.Controllers.ConsentSDK;
+import com.reccakun.clientappiptv.Controllers.DBConnect;
+import com.reccakun.clientappiptv.Controllers.ViewPagerAdapter;
+import com.reccakun.clientappiptv.Models.Dream;
+import com.reccakun.clientappiptv.R;
+
 import java.util.List;
 
 public class ContentActivity extends AppCompatActivity {
-    private ViewPager viewPager;
-      private Context mContext=ContentActivity.this;
-     List<Dream> listDreams;
-    DBConnect dbDreams ;
-    int idC,idD,idItem;
+    static private Context context;
+    List<Dream> listDreams;
+    DBConnect dbDreams;
+    int idC, idD, idItem;
     boolean isFavActivity;
-     ImageView imgBack;
+    ImageView imgBack;
+    private ViewPager viewPager;
+    private Context mContext = ContentActivity.this;
     private AdView mAdView;
     private InterstitialAd mInterstitialAd;
-   static private Context context;
     private ConsentSDK consentSDK;
+    private SearchView mSearchView;
 
     @SuppressLint("WrongConstant")
     @TargetApi(Build.VERSION_CODES.O)
@@ -72,58 +61,54 @@ public class ContentActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_content);
-        dbDreams=new DBConnect(getApplicationContext());
-        context=this;
-try{
+        dbDreams = new DBConnect(getApplicationContext());
+        context = this;
+        try {
 
 
-    MobileAds.initialize(this, new OnInitializationCompleteListener() {
-        @Override
-        public void onInitializationComplete(InitializationStatus initializationStatus) {
+            MobileAds.initialize(this, new OnInitializationCompleteListener() {
+                @Override
+                public void onInitializationComplete(InitializationStatus initializationStatus) {
+                }
+            });
+
+
+            mAdView = findViewById(R.id.adView2);
+            AdRequest adRequest = new AdRequest.Builder().build();
+            mAdView.loadAd(adRequest);
+
+
+            dbDreams = new DBConnect(getApplicationContext());
+            Intent intent = getIntent();
+            idC = (int) intent.getSerializableExtra("idCat");
+            idD = (int) intent.getSerializableExtra("idDream");
+            idItem = (int) intent.getSerializableExtra("idItem");
+            isFavActivity = (boolean) intent.getSerializableExtra("isFav");
+            if (isFavActivity) {
+                listDreams = dbDreams.getFavDreams();
+                viewPager = (ViewPager) findViewById(R.id.pager);
+
+                ViewPagerAdapter adapter = new ViewPagerAdapter(mContext, listDreams, idD, true, viewPager);
+                viewPager.setAdapter(adapter);
+                viewPager.setCurrentItem(idItem);
+
+
+            } else {
+                viewPager = (ViewPager) findViewById(R.id.pager);
+
+                listDreams = dbDreams.getDreamsByCat(idC);
+                ViewPagerAdapter adapter = new ViewPagerAdapter(mContext, listDreams, idD, false, viewPager);
+                viewPager.setAdapter(adapter);
+                viewPager.setCurrentItem(idItem);
+
+
+            }
+
+
+        } catch (Exception e) {
+            Toast.makeText(mContext, e.getMessage(), Toast.LENGTH_SHORT).show();
         }
-    });
-
-
-    mAdView = findViewById(R.id.adView2);
-    AdRequest adRequest = new AdRequest.Builder().build();
-    mAdView.loadAd(adRequest);
-
-
-        dbDreams=new DBConnect(getApplicationContext());
-          Intent intent = getIntent();
-          idC = (int)  intent.getSerializableExtra("idCat");
-          idD  = (int)   intent.getSerializableExtra("idDream");
-          idItem  = (int)   intent.getSerializableExtra("idItem");
-    isFavActivity  = (boolean)   intent.getSerializableExtra("isFav");
-        if (isFavActivity){
-            listDreams=dbDreams.getFavDreams();
-            viewPager = (ViewPager) findViewById(R.id.pager);
-
-            ViewPagerAdapter adapter = new ViewPagerAdapter(mContext,listDreams,idD,true,viewPager);
-            viewPager.setAdapter(adapter);
-            viewPager.setCurrentItem(idItem );
-
-
-        }else {
-            viewPager = (ViewPager) findViewById(R.id.pager);
-
-          listDreams=dbDreams.getDreamsByCat(idC);
-            ViewPagerAdapter adapter = new ViewPagerAdapter(mContext,listDreams,idD,false,viewPager);
-            viewPager.setAdapter(adapter);
-            viewPager.setCurrentItem(idItem );
-
-
-        }
-
-
-
-     }catch (Exception e){
-         Toast.makeText(mContext, e.getMessage(), Toast.LENGTH_SHORT).show();
     }
-    }
-    private SearchView mSearchView;
-
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -143,7 +128,10 @@ try{
         int id = item.getItemId();
 
         switch (id) {
-
+            case R.id.action_home: {
+                startActivity(new Intent(this, MainActivity.class));
+                break;
+            }
 
             case R.id.action_search: {
 
@@ -156,8 +144,7 @@ try{
                 break;
             }
 
-            case R.id.privacy:
-            {
+            case R.id.privacy: {
                 String url = getString(R.string.url_privacy);
                 Intent i = new Intent(Intent.ACTION_VIEW);
                 try {
@@ -166,8 +153,7 @@ try{
                 } catch (Exception e) {
                 }
             }
-            case R.id.share:
-            {
+            case R.id.share: {
                 try {
                     Intent shareIntent = new Intent(Intent.ACTION_SEND);
                     shareIntent.setType("text/plain");
@@ -182,8 +168,7 @@ try{
                 break;
             }
 
-            case R.id.apps:
-            {
+            case R.id.apps: {
                 try {
                     Uri uri = Uri.parse("market://details?id=" + getPackageName());
                     Intent goToMarket = new Intent(Intent.ACTION_VIEW, uri);
@@ -196,8 +181,7 @@ try{
                 break;
             }
 
-            case R.id.rate:
-            {
+            case R.id.rate: {
                 try {
                     Uri uri = Uri.parse("market://details?id=" + getPackageName());
                     Intent goToMarket = new Intent(Intent.ACTION_VIEW, uri);
@@ -209,7 +193,7 @@ try{
                 }
                 break;
             }
-            case R.id.action_gdbr:{
+            case R.id.action_gdbr: {
                 changegdpr(this);
                 break;
             }
@@ -232,7 +216,8 @@ try{
         });
 
     }
-     private void populateUnifiedNativeAdView(UnifiedNativeAd nativeAd, UnifiedNativeAdView adView) {
+
+    private void populateUnifiedNativeAdView(UnifiedNativeAd nativeAd, UnifiedNativeAdView adView) {
         // Set the media view. Media content will be automatically populated in the media view once
         // adView.setNativeAd() is called.
         MediaView mediaView = adView.findViewById(R.id.ad_media);

@@ -2,7 +2,6 @@ package com.reccakun.clientappiptv.Controllers;
 
 
 import android.content.Context;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +13,7 @@ import android.widget.Toast;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
-import com.reccakun.clientappiptv.BuildConfig;
+import com.google.android.gms.ads.AdListener;
 import com.reccakun.clientappiptv.Models.Dream;
 import com.reccakun.clientappiptv.R;
 
@@ -26,18 +25,23 @@ public class ViewPagerAdapter extends PagerAdapter {
 
     Context mContext;
     LayoutInflater mLayoutInflater;
-    List<Dream> ld=new ArrayList<>();
+    List<Dream> ld = new ArrayList<>();
     Integer idDream;
-    DBConnect dbDreams ;
- boolean  isFavActivity;
-ViewPager vp;
-    public ViewPagerAdapter(Context context, List<Dream> ld, Integer idDream, boolean isFavActivity, ViewPager vp ) {
+    DBConnect dbDreams;
+    boolean isFavActivity;
+    ViewPager vp;
+    private ads manager;
+
+    public ViewPagerAdapter(Context context, List<Dream> ld, Integer idDream, boolean isFavActivity, ViewPager vp) {
         mContext = context;
+        manager = ads.getinstence();
+        manager.interInstence(context);
+        manager.loadads();
         mLayoutInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        this.idDream=idDream;
-        this.ld=ld;
-        this.isFavActivity=isFavActivity;
-this.vp=vp;
+        this.idDream = idDream;
+        this.ld = ld;
+        this.isFavActivity = isFavActivity;
+        this.vp = vp;
     }
 
     @Override
@@ -53,110 +57,157 @@ this.vp=vp;
     @Override
     public Object instantiateItem(ViewGroup container, final int position) {
 
-               final View itemView = mLayoutInflater.inflate(R.layout.pager_item, container, false);
+        View itemView = mLayoutInflater.inflate(R.layout.pager_item, container, false);
 
         TextView txtContent = (TextView) itemView.findViewById(R.id.txt_content);
         txtContent.setText(ld.get(position).getContent());
         TextView title = (TextView) itemView.findViewById(R.id.txt_pageTitle);
-
         title.setText(ld.get(position).getTitle());
         container.addView(itemView);
-        dbDreams=new DBConnect(mContext.getApplicationContext());
+        dbDreams = new DBConnect(mContext.getApplicationContext());
         final ImageView btnAddFav = itemView.findViewById(R.id.btnAddFavorite);
-        final ImageView btnShare=itemView.findViewById(R.id.shareContent);
-        if (isFavActivity){
-            try{
-                ImageView btnNext=itemView.findViewById(R.id.btnNext);
-                ImageView btnPrev=itemView.findViewById(R.id.btnPrev);
+        if (isFavActivity) {
+            try {
+                ImageView btnNext = itemView.findViewById(R.id.btnNext);
+                ImageView btnPrev = itemView.findViewById(R.id.btnPrev);
                 btnNext.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        if (ads.cout_ads % 5 == 0) {
+                            manager.showads();
+                        } else manager.loadads();
+                        ads.cout_ads++;
+                        manager.interstitialAd().setAdListener(new AdListener() {
+                            @Override
+                            public void onAdClosed() {
+                                super.onAdClosed();
+                            }
 
-                        vp.setCurrentItem(vp.getCurrentItem()+1);
+                        });
+
+                        vp.setCurrentItem(vp.getCurrentItem() + 1);
                     }
                 });
                 btnPrev.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        if (ads.cout_ads % 5 == 0) {
+                            manager.showads();
+                        } else manager.loadads();
+                        manager.interstitialAd().setAdListener(new AdListener() {
+                            @Override
+                            public void onAdClosed() {
+                                super.onAdClosed();
+                            }
 
-                        vp.setCurrentItem(vp.getCurrentItem()-1);
+                        });
+                        ads.cout_ads++;
+
+
+                        vp.setCurrentItem(vp.getCurrentItem() - 1);
                     }
                 });
-
-
-            }catch (Exception e){
+            } catch (Exception e) {
                 Toast.makeText(mContext, e.getMessage(), Toast.LENGTH_SHORT).show();
             }
-            if (dbDreams.isFavorite(ld.get(position).getDream_ID())){
-                btnAddFav.setImageResource(R.drawable.addheart );
-              //  Toast.makeText(mContext, ""+dbDreams.isFavorite(ld.get(position).getDream_ID()), Toast.LENGTH_SHORT).show();
-            }
-            else{
+            if (dbDreams.isFavorite(ld.get(position).getDream_ID())) {
+                btnAddFav.setImageResource(R.drawable.addheart);
+                //  Toast.makeText(mContext, ""+dbDreams.isFavorite(ld.get(position).getDream_ID()), Toast.LENGTH_SHORT).show();
+            } else {
                 //Toast.makeText(mContext, ""+ld.get(position).getDream_ID()+""+dbDreams.isFavorite(ld.get(position).getDream_ID()), Toast.LENGTH_SHORT).show();
                 //btnAddFav.setText("اضافة للمفضلة");
 
             }
 
 
-
-
             btnAddFav.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                     if (dbDreams.isFavorite(ld.get(position).getDream_ID())){
+                    if (ads.cout_ads % 5 == 0) {
+                        manager.showads();
+                    } else manager.loadads();
+                    ads.cout_ads++;
+                    manager.interstitialAd().setAdListener(new AdListener() {
+                        @Override
+                        public void onAdClosed() {
+                            super.onAdClosed();
+                        }
 
-                        if (dbDreams.updateHandler( ld.get(position).getDream_ID(),-1 )){
+                    });
+                    if (dbDreams.isFavorite(ld.get(position).getDream_ID())) {
+
+                        if (dbDreams.updateHandler(ld.get(position).getDream_ID(), -1)) {
 
                         }
-                        btnAddFav.setImageResource(R.drawable.heart );
-                    }else {
-                        if (dbDreams.updateHandler( ld.get(position).getDream_ID(),1 )){
+                        btnAddFav.setImageResource(R.drawable.heart);
+                    } else {
+                        if (dbDreams.updateHandler(ld.get(position).getDream_ID(), 1)) {
 
                         }
-                        btnAddFav.setImageResource(R.drawable.addheart );
+                        btnAddFav.setImageResource(R.drawable.addheart);
                     }
 
                     //Toast.makeText(mContext, "failed", Toast.LENGTH_SHORT).show();
 
                 }
             });
-        }else {
-            try{
-                ImageView btnNext=itemView.findViewById(R.id.btnNext);
-                ImageView btnPrev=itemView.findViewById(R.id.btnPrev);
+        } else {
+            try {
+                ImageView btnNext = itemView.findViewById(R.id.btnNext);
+                ImageView btnPrev = itemView.findViewById(R.id.btnPrev);
                 btnNext.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        if (ads.cout_ads % 5 == 0) {
+                            manager.showads();
+                        } else manager.loadads();
+                        ads.cout_ads++;
+                        manager.interstitialAd().setAdListener(new AdListener() {
+                            @Override
+                            public void onAdClosed() {
+                                super.onAdClosed();
+                            }
 
-                        vp.setCurrentItem(vp.getCurrentItem()+1);
+                        });
+                        vp.setCurrentItem(vp.getCurrentItem() + 1);
                     }
                 });
                 btnPrev.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        if (ads.cout_ads % 5 == 0) {
+                            manager.showads();
+                        } else manager.loadads();
+                        ads.cout_ads++;
+                        manager.interstitialAd().setAdListener(new AdListener() {
+                            @Override
+                            public void onAdClosed() {
+                                super.onAdClosed();
+                            }
 
-                        vp.setCurrentItem(vp.getCurrentItem()-1);
+                        });
+                        vp.setCurrentItem(vp.getCurrentItem() - 1);
                     }
                 });
-            }catch (Exception e){
+            } catch (Exception e) {
                 Toast.makeText(mContext, e.getMessage(), Toast.LENGTH_SHORT).show();
             }
 
             if (dbDreams.isFavorite(ld.get(position).getDream_ID()))
-                btnAddFav.setImageResource(R.drawable.addheart );
+                btnAddFav.setImageResource(R.drawable.addheart);
             else
-                btnAddFav.setImageResource(R.drawable.heart );
+                btnAddFav.setImageResource(R.drawable.heart);
             btnAddFav.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (dbDreams.isFavorite(ld.get(position).getDream_ID())){
-                        if (dbDreams.updateHandler( ld.get(position).getDream_ID(),-1 )){
-                            btnAddFav.setImageResource(R.drawable.heart );
+                    if (dbDreams.isFavorite(ld.get(position).getDream_ID())) {
+                        if (dbDreams.updateHandler(ld.get(position).getDream_ID(), -1)) {
+                            btnAddFav.setImageResource(R.drawable.heart);
 
                         }
-                    }else {
-                        if (dbDreams.updateHandler( ld.get(position).getDream_ID(),1 )){
-                            btnAddFav.setImageResource(R.drawable.addheart );
+                    } else {
+                        if (dbDreams.updateHandler(ld.get(position).getDream_ID(), 1)) {
+                            btnAddFav.setImageResource(R.drawable.addheart);
 
                         }
                     }
@@ -165,22 +216,8 @@ this.vp=vp;
 
                 }
             });
+
         }
-
-        btnShare.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Intent shareIntent = new Intent(Intent.ACTION_SEND);
-                shareIntent.setType("text/plain");
-                shareIntent.putExtra(Intent.EXTRA_SUBJECT, "My application name");
-                String shareMessage = "\n"+ld.get(position).getTitle()+"\n"+
-                        ld.get(position).getContent();
-                shareMessage = shareMessage + "https://play.google.com/store/apps/details?id=" + BuildConfig.APPLICATION_ID + "\n\n";
-                shareIntent.putExtra(Intent.EXTRA_TEXT, shareMessage);
-                mContext.startActivity(shareIntent);
-            }
-        });
 
 
         return itemView;

@@ -1,25 +1,16 @@
 package com.reccakun.clientappiptv.Views;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.SearchManager;
 import android.app.SearchableInfo;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
-
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -29,19 +20,19 @@ import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.android.gms.ads.AdListener;
-import com.google.android.gms.ads.AdLoader;
 import com.google.android.gms.ads.VideoController;
-import com.google.android.gms.ads.VideoOptions;
 import com.google.android.gms.ads.formats.MediaView;
-import com.google.android.gms.ads.formats.NativeAdOptions;
 import com.google.android.gms.ads.formats.UnifiedNativeAd;
 import com.google.android.gms.ads.formats.UnifiedNativeAdView;
 import com.reccakun.clientappiptv.BuildConfig;
 import com.reccakun.clientappiptv.Controllers.ConsentSDK;
 import com.reccakun.clientappiptv.Controllers.DBConnect;
-import com.reccakun.clientappiptv.Models.Dream;
 import com.reccakun.clientappiptv.Controllers.FavDreamAdapter;
+import com.reccakun.clientappiptv.Controllers.ads;
+import com.reccakun.clientappiptv.Models.Dream;
 import com.reccakun.clientappiptv.R;
 
 import java.util.ArrayList;
@@ -50,33 +41,34 @@ import java.util.Locale;
 
 public class FavoriteActivity extends AppCompatActivity {
     FavDreamAdapter mAdapter;
-    Context mContext= FavoriteActivity.this;
+    Context mContext = FavoriteActivity.this;
     List<Dream> listDreams;
     List<Dream> copyList;
-    DBConnect dbDreams ;
+    DBConnect dbDreams;
     int id;
     ImageView home;
     ImageView imgBack;
     private SearchView mSearchView;
     private ConsentSDK consentSDK;
+    private ads manager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_favorite);
-        try{
+        manager = ads.getinstence();
+        manager.interInstence(this);
+        manager.loadads();
+        try {
 
 
-
-
-
-             listDreams=new ArrayList<>();
-            copyList =  new ArrayList<>();
-               dbDreams=new DBConnect(getApplicationContext());
-            listDreams=dbDreams.getFavDreams();
-            copyList=dbDreams.getFavDreams();
-            mAdapter=new FavDreamAdapter(mContext,R.layout.dreams_item, listDreams);
-            ListView listViewCourses=findViewById(R.id.listview_fav_dreams);
+            listDreams = new ArrayList<>();
+            copyList = new ArrayList<>();
+            dbDreams = new DBConnect(getApplicationContext());
+            listDreams = dbDreams.getFavDreams();
+            copyList = dbDreams.getFavDreams();
+            mAdapter = new FavDreamAdapter(mContext, R.layout.dreams_item, listDreams);
+            ListView listViewCourses = findViewById(R.id.listview_fav_dreams);
             listViewCourses.setAdapter(mAdapter);
 
             //Toast.makeText(mContext, ""+dbDreams.isFavorite(333), Toast.LENGTH_SHORT).show();
@@ -84,22 +76,36 @@ public class FavoriteActivity extends AppCompatActivity {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long idL) {
 
-                    Intent i =new Intent(FavoriteActivity.this,ContentActivity.class);
-                    int idItem=  position;
+                    final Intent i = new Intent(FavoriteActivity.this, ContentActivity.class);
+                    int idItem = position;
                     i.putExtra("idDream", listDreams.get(position).getDream_ID());
-                    i.putExtra("idCat",   id);
-                    i.putExtra("idItem",   idItem);
-                    i.putExtra("isFav",true);
-                    startActivity(i);
+                    i.putExtra("idCat", id);
+                    i.putExtra("idItem", idItem);
+                    i.putExtra("isFav", true);
+
+                    if (ads.cout_ads % 5 == 0) {
+                        manager.showads();
+                        manager.loadads();
+                    } else
+
+                        startActivity(i);
+                    manager.interstitialAd.setAdListener(new AdListener() {
+                        @Override
+                        public void onAdClosed() {
+                            startActivity(i);
+                        }
+                    });
+                    ads.cout_ads++;
+
                 }
             });
 
-         }catch (Exception e){
-            Toast.makeText(mContext,"main " +e.getMessage(), Toast.LENGTH_SHORT).show();
+        } catch (Exception e) {
+            Toast.makeText(mContext, "main " + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
 
-     private void setupSearchView() {
+    private void setupSearchView() {
 
         mSearchView.setIconifiedByDefault(true);
 
@@ -156,6 +162,7 @@ public class FavoriteActivity extends AppCompatActivity {
 
 
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
@@ -176,7 +183,10 @@ public class FavoriteActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         switch (id) {
-
+            case R.id.action_home: {
+                startActivity(new Intent(this, MainActivity.class));
+                break;
+            }
 
             case R.id.action_search: {
 
@@ -189,8 +199,7 @@ public class FavoriteActivity extends AppCompatActivity {
                 break;
             }
 
-            case R.id.privacy:
-            {
+            case R.id.privacy: {
                 String url = getString(R.string.url_privacy);
                 Intent i = new Intent(Intent.ACTION_VIEW);
                 try {
@@ -199,8 +208,7 @@ public class FavoriteActivity extends AppCompatActivity {
                 } catch (Exception e) {
                 }
             }
-            case R.id.share:
-            {
+            case R.id.share: {
                 try {
                     Intent shareIntent = new Intent(Intent.ACTION_SEND);
                     shareIntent.setType("text/plain");
@@ -215,8 +223,7 @@ public class FavoriteActivity extends AppCompatActivity {
                 break;
             }
 
-            case R.id.apps:
-            {
+            case R.id.apps: {
                 try {
                     Uri uri = Uri.parse("market://details?id=" + getPackageName());
                     Intent goToMarket = new Intent(Intent.ACTION_VIEW, uri);
@@ -229,8 +236,7 @@ public class FavoriteActivity extends AppCompatActivity {
                 break;
             }
 
-            case R.id.rate:
-            {
+            case R.id.rate: {
                 try {
                     Uri uri = Uri.parse("market://details?id=" + getPackageName());
                     Intent goToMarket = new Intent(Intent.ACTION_VIEW, uri);
@@ -242,7 +248,7 @@ public class FavoriteActivity extends AppCompatActivity {
                 }
                 break;
             }
-            case R.id.action_gdbr:{
+            case R.id.action_gdbr: {
                 changegdpr(this);
                 break;
             }
@@ -265,7 +271,8 @@ public class FavoriteActivity extends AppCompatActivity {
         });
 
     }
-     private void populateUnifiedNativeAdView(UnifiedNativeAd nativeAd, UnifiedNativeAdView adView) {
+
+    private void populateUnifiedNativeAdView(UnifiedNativeAd nativeAd, UnifiedNativeAdView adView) {
         // Set the media view. Media content will be automatically populated in the media view once
         // adView.setNativeAd() is called.
         MediaView mediaView = adView.findViewById(R.id.ad_media);

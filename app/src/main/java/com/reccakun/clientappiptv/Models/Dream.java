@@ -3,11 +3,10 @@ package com.reccakun.clientappiptv.Models;
 public class Dream {
 
 
-
-    private String  Title ;
-    private String Description ;
-    private  String Content ;
-    private int dream_ID ;
+    private String Title;
+    private String Description;
+    private String Content;
+    private int dream_ID;
     private int cat_ID;
 
     public Dream(String title, String description, String content, int dream_ID, int cat_ID) {
@@ -58,7 +57,6 @@ public class Dream {
     public void setContent(String content) {
         Content = content;
     }
-
 
 
 }

@@ -6,9 +6,6 @@ import android.app.Dialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
-
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -30,6 +27,8 @@ import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdLoader;
 import com.google.android.gms.ads.AdRequest;
@@ -44,9 +43,9 @@ import com.google.android.gms.ads.formats.UnifiedNativeAdView;
 import com.google.android.gms.ads.initialization.InitializationStatus;
 import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.reccakun.clientappiptv.BuildConfig;
+import com.reccakun.clientappiptv.Controllers.CategoriesAdapter;
 import com.reccakun.clientappiptv.Controllers.ConsentSDK;
 import com.reccakun.clientappiptv.Controllers.DBConnect;
-import com.reccakun.clientappiptv.Controllers.CategoriesAdapter;
 import com.reccakun.clientappiptv.Controllers.ads;
 import com.reccakun.clientappiptv.Models.Category;
 import com.reccakun.clientappiptv.R;
@@ -55,18 +54,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
+    public Context context;
     CategoriesAdapter mAdapter;
     Context mContext = MainActivity.this;
     List<Category> listsCat = new ArrayList<>();
     DBConnect dbDreams;
     List<Category> copyList;
-    private AdView mAdView;
-     public static Context context ;
     ads manager;
     ConsentSDK consentSDK;
-    private UnifiedNativeAd nativeAd;
     LayoutInflater inflater;
     View v;
+    SearchView mSearchView;
+    private AdView mAdView;
+    private UnifiedNativeAd nativeAd;
     private FrameLayout frameLayout;
 
     @SuppressLint("WrongConstant")
@@ -74,12 +74,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        context = this;
         try {
-            context = this;
-            manager=ads.getinstence();
+
+            manager = ads.getinstence();
             manager.interInstence(context);
-            manager.loadads(context);
+            manager.loadads();
             MobileAds.initialize(this, new OnInitializationCompleteListener() {
                 @Override
                 public void onInitializationComplete(InitializationStatus initializationStatus) {
@@ -142,7 +142,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-
     private void checkClickedItem(int position) {
         try {
 
@@ -154,21 +153,17 @@ public class MainActivity extends AppCompatActivity {
             final Intent intent = new Intent(this, ListsContentActivity.class);
             intent.putExtra("id", idCat);
 
-            if (ads.cout_ads%4!=0){
+            if (ads.cout_ads % 5 != 0) {
                 startActivity(intent);
+                manager.loadads();
             } else {
-                manager.showads(context);
-                manager.interstitialAd().setAdListener(new AdListener(){
+                manager.showads();
+                manager.interstitialAd().setAdListener(new AdListener() {
                     @Override
                     public void onAdClosed() {
-                        super.onAdClosed();
-
-                    }
-                    @Override
-                    public void onAdFailedToLoad(int i) {
-                        super.onAdFailedToLoad(i);
                         startActivity(intent);
                     }
+
                 });
             }
             ads.cout_ads++;
@@ -183,10 +178,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
 
-            rateApp();
+        rateApp();
     }
-
-    SearchView mSearchView;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -221,64 +214,60 @@ public class MainActivity extends AppCompatActivity {
                 break;
             }
 
-        case R.id.privacy:
-        {
-            String url = getString(R.string.url_privacy);
-            Intent i = new Intent(Intent.ACTION_VIEW);
-            try {
-                i.setData(Uri.parse(url));
-                startActivity(i);
-            } catch (Exception e) {
+            case R.id.privacy: {
+                String url = getString(R.string.url_privacy);
+                Intent i = new Intent(Intent.ACTION_VIEW);
+                try {
+                    i.setData(Uri.parse(url));
+                    startActivity(i);
+                } catch (Exception e) {
+                }
             }
-        }
-        case R.id.share:
-        {
-            try {
-                Intent shareIntent = new Intent(Intent.ACTION_SEND);
-                shareIntent.setType("text/plain");
-                shareIntent.putExtra(Intent.EXTRA_SUBJECT, "My application name");
-                String shareMessage = "\nLet me recommend you this application\n\n";
-                shareMessage = shareMessage + "https://play.google.com/store/apps/details?id=" + BuildConfig.APPLICATION_ID + "\n\n";
-                shareIntent.putExtra(Intent.EXTRA_TEXT, shareMessage);
-                startActivity(Intent.createChooser(shareIntent, "choose one"));
-            } catch (Exception e) {
-                //e.toString();
+            case R.id.share: {
+                try {
+                    Intent shareIntent = new Intent(Intent.ACTION_SEND);
+                    shareIntent.setType("text/plain");
+                    shareIntent.putExtra(Intent.EXTRA_SUBJECT, "My application name");
+                    String shareMessage = "\nLet me recommend you this application\n\n";
+                    shareMessage = shareMessage + "https://play.google.com/store/apps/details?id=" + BuildConfig.APPLICATION_ID + "\n\n";
+                    shareIntent.putExtra(Intent.EXTRA_TEXT, shareMessage);
+                    startActivity(Intent.createChooser(shareIntent, "choose one"));
+                } catch (Exception e) {
+                    //e.toString();
+                }
+                break;
             }
-            break;
-        }
 
-        case R.id.apps:
-        {
-            try {
-                Uri uri = Uri.parse("market://details?id=" + getPackageName());
-                Intent goToMarket = new Intent(Intent.ACTION_VIEW, uri);
-                startActivity(goToMarket);
-            } catch (ActivityNotFoundException e) {
-                startActivity(new Intent(Intent.ACTION_VIEW,
-                        Uri.parse("http://play.google.com/store/apps/details?id="
-                                + getPackageName())));
+            case R.id.apps: {
+                try {
+                    Uri uri = Uri.parse("market://details?id=" + getPackageName());
+                    Intent goToMarket = new Intent(Intent.ACTION_VIEW, uri);
+                    startActivity(goToMarket);
+                } catch (ActivityNotFoundException e) {
+                    startActivity(new Intent(Intent.ACTION_VIEW,
+                            Uri.parse("http://play.google.com/store/apps/details?id="
+                                    + getPackageName())));
+                }
+                break;
             }
-            break;
-        }
 
-        case R.id.rate:
-        {
-            try {
-                Uri uri = Uri.parse("market://details?id=" + getPackageName());
-                Intent goToMarket = new Intent(Intent.ACTION_VIEW, uri);
-                startActivity(goToMarket);
-            } catch (ActivityNotFoundException e) {
-                startActivity(new Intent(Intent.ACTION_VIEW,
-                        Uri.parse("http://play.google.com/store/apps/details?id="
-                                + getPackageName())));
+            case R.id.rate: {
+                try {
+                    Uri uri = Uri.parse("market://details?id=" + getPackageName());
+                    Intent goToMarket = new Intent(Intent.ACTION_VIEW, uri);
+                    startActivity(goToMarket);
+                } catch (ActivityNotFoundException e) {
+                    startActivity(new Intent(Intent.ACTION_VIEW,
+                            Uri.parse("http://play.google.com/store/apps/details?id="
+                                    + getPackageName())));
+                }
+                break;
             }
-            break;
+            case R.id.action_gdbr: {
+                changegdpr(this);
+                break;
+            }
         }
-        case R.id.action_gdbr:{
-            changegdpr(this);
-            break;
-        }
-    }
         return super.onOptionsItemSelected(item);
     }
 
@@ -297,6 +286,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
+
     private void refreshAd() {
 
 
@@ -342,53 +332,55 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
+
     public void rateApp() {
-try{
+        try {
 
 
-        final AlertDialog.Builder builder = new AlertDialog.Builder(context);
+            final AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
-        if (v.getParent() != null)
-            ((ViewGroup) v.getParent()).removeAllViews();
-        builder.setView(v);
+            if (v.getParent() != null)
+                ((ViewGroup) v.getParent()).removeAllViews();
+            builder.setView(v);
 
-        final Dialog dialog = builder.create();
-        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-        v.findViewById(R.id.doneBtn).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialog.dismiss();
-                startRate();
+            final Dialog dialog = builder.create();
+            dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+            v.findViewById(R.id.doneBtn).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    dialog.dismiss();
+                    startRate();
 
-            }
-        });
-        v.findViewById(R.id.cancelBtn).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+                }
+            });
+            v.findViewById(R.id.cancelBtn).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
 
-                dialog.dismiss();
-                finishAffinity();
-                System.exit(0);
+                    dialog.dismiss();
+                    finishAffinity();
+                    System.exit(0);
 
 
-            }
-        });
-        dialog.setCanceledOnTouchOutside(true);
-        dialog.show();
-        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
-        lp.copyFrom(dialog.getWindow().getAttributes());
-        float density = getResources().getDisplayMetrics().density;
-        lp.width = (int) (320 * density);
-        lp.height = (int) (400 * density);
-        lp.gravity = Gravity.CENTER;
-        dialog.getWindow().setAttributes(lp);
+                }
+            });
+            dialog.setCanceledOnTouchOutside(true);
+            dialog.show();
+            WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+            lp.copyFrom(dialog.getWindow().getAttributes());
+            float density = getResources().getDisplayMetrics().density;
+            lp.width = (int) (320 * density);
+            lp.height = (int) (400 * density);
+            lp.gravity = Gravity.CENTER;
+            dialog.getWindow().setAttributes(lp);
 
-    }catch (Exception e){
-    Toast.makeText(mContext, e.getMessage(), Toast.LENGTH_SHORT).show();
+        } catch (Exception e) {
+            Toast.makeText(mContext, e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+
     }
 
-    }
     private void populateUnifiedNativeAdView(UnifiedNativeAd nativeAd, UnifiedNativeAdView adView) {
         // Set the media view. Media content will be automatically populated in the media view once
         // adView.setNativeAd() is called.
