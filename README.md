@@ -1,4 +1,4 @@
-# Dream_Interpretation_Arabic
+# Dream_Interpretation_(Arabic)_Android_studio_code_source
                                           
  [Download the apk file : google drive](https://drive.google.com/file/d/1ES7SnvRRlempNeJIPJ1telfzT0M4P7Z3/view?usp=sharing) 
  
