@@ -2,8 +2,10 @@
                                           
  [Download the apk file : google drive](https://drive.google.com/file/d/1ES7SnvRRlempNeJIPJ1telfzT0M4P7Z3/view?usp=sharing) 
  
-this is a very simple app that o made while i learn about SQLite and listView 
+this is a very simple app that o made while i learn about SQLite and ListView + ViewPager 
+
 admobe ads are integrated so feel free to reskin the app and use it :D sharing is caring 
+
 it has a simple fine design(i believe ) and also i integrated Admobe and Facebook audience to it .
  
  
